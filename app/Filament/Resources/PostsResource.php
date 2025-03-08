@@ -24,6 +24,7 @@ use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\CheckboxColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Group;
 use App\Models\Categories;
 
 class PostsResource extends Resource
@@ -61,23 +62,31 @@ class PostsResource extends Resource
                             ->required()
                             ->columnSpanFull(),
                     ])->columnSpan(2)->columns(2),
-                
-                Section::make('Post Meta')
-                    ->Description('This is the meta information about the post.')
+                Group::make()
                     ->schema([
-                        FileUpload::make('thumbnail')
-                            ->label('Thumbnail')
-                            ->image()
-                            ->disk('public')->directory('thumbnails')
-                            ->required(),
-                        TagsInput::make('tags') 
-                            ->label('Tags')
-                            ->placeholder('Add a tag')
-                            // ->tagify()
-                            ->required(),
-                        Checkbox::make('is_published')
-                            ->label('Is Published'),
-                    ])->columnSpan(1),  
+                        Section::make('Image Information')
+                        ->Description('This is the meta information about the post.')
+                        ->schema([
+                            FileUpload::make('thumbnail')
+                                ->label('Thumbnail')
+                                ->image()
+                                ->disk('public')->directory('thumbnails')
+                                ->required(),
+                        ])->columnSpan(1),
+                        Section::make('Meta Information')
+                        ->Description('This is the meta information about the post.')
+                        ->schema([
+                            TagsInput::make('tags') 
+                                ->label('Tags')
+                                ->placeholder('Add a tag')
+                                // ->tagify()
+                                ->required(),
+                            Checkbox::make('is_published')
+                                    ->label('Is Published'),
+                        ])->columnSpan(1),
+                    ])->columnSpan(1),
+                    
+                  
             ])->columns(3);
     }
 
