@@ -23,6 +23,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\CheckboxColumn;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Forms\Components\Section;
 use App\Models\Categories;
 
 class PostsResource extends Resource
@@ -35,46 +36,49 @@ class PostsResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('title')
-                    ->label('Title')
-                    ->required(),
-                TextInput::make('slug')
-                    ->label('Slug')
-                    ->required(),
-                Select::make('category_id')
-                    ->label('Category')
-                    ->relationship('category', 'name')
-                    ->options(Categories::all()->pluck('name', 'id')->toArray())
-                    ->required(),
-                ColorPicker::make('color')
-                    ->label('Color')
-                    ->default('#000000')
-                    ->required(),
-                
-                MarkdownEditor::make('content')
-                    ->label('Content')
-                    ->required(),
 
-                FileUpload::make('thumbnail')
-                    ->label('Thumbnail')
-                    ->image()
-                    ->disk('public')->directory('thumbnails')
-                    ->required(),
+                Section::make('Post Information')
+                    ->Description('This is the information about the post.')
+                    ->schema([
+                        TextInput::make('title')
+                            ->label('Title')
+                            ->required(),
+                        TextInput::make('slug')
+                            ->label('Slug')
+                            ->required(),
+                        Select::make('category_id')
+                            ->label('Category')
+                            ->relationship('category', 'name')
+                            ->options(Categories::all()->pluck('name', 'id')->toArray())
+                            ->required(),
+                        ColorPicker::make('color')
+                            ->label('Color')
+                            ->default('#000000')
+                            ->required(),
+                        
+                        MarkdownEditor::make('content')
+                            ->label('Content')
+                            ->required()
+                            ->columnSpanFull(),
+                    ])->columnSpan(2)->columns(2),
                 
-                
-                
-                TagsInput::make('tags') 
-                    ->label('Tags')
-                    ->placeholder('Add a tag')
-                    // ->tagify()
-                    ->required(),
-                Checkbox::make('is_published')
-                    ->label('Is Published'),
-                
-                
-                
-                
-            ]);
+                Section::make('Post Meta')
+                    ->Description('This is the meta information about the post.')
+                    ->schema([
+                        FileUpload::make('thumbnail')
+                            ->label('Thumbnail')
+                            ->image()
+                            ->disk('public')->directory('thumbnails')
+                            ->required(),
+                        TagsInput::make('tags') 
+                            ->label('Tags')
+                            ->placeholder('Add a tag')
+                            // ->tagify()
+                            ->required(),
+                        Checkbox::make('is_published')
+                            ->label('Is Published'),
+                    ])->columnSpan(1),  
+            ])->columns(3);
     }
 
     public static function table(Table $table): Table
